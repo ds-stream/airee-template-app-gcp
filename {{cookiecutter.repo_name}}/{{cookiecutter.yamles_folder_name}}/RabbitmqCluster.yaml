@@ -1,0 +1,23 @@
+apiVersion: rabbitmq.com/v1beta1
+kind: RabbitmqCluster
+metadata:
+  name: rabbitmq-cluster
+  namespace: {{cookiecutter.namespace}}
+  labels:
+    app: celery
+spec:
+  replicas: 1
+  resources:
+    requests:
+      memory: "1Gi"
+      cpu: "500m"
+    limits:
+      memory: "2Gi"
+      cpu: "1"
+  rabbitmq:
+          additionalConfig: |
+                  default_user = admin 
+                  default_pass = admin
+                  default_user_tags.administrator = true
+
+

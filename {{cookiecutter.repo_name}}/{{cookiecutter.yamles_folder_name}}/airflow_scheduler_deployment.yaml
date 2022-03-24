@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{cookiecutter.namespace}}
+  name: scheduler-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: airflow-scheduler
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: airflow-scheduler
+    spec:
+      containers:
+      - name: airflow-scheduler
+        image: gcr.io/dsstream-airflowk8s/airflow:latest
+        imagePullPolicy: Always
+        args:
+          - bash
+          - -c
+          - exec airflow db init | exec airflow scheduler
+        resources:
+{% if cookiecutter.airflow_performance == 'small' -%}
+{% include "{{cookiecutter.yamles_folder_name}}/airflow_mode_config/small/scheduler.cfg" %}
+{% elif cookiecutter.airflow_performance == 'standard' -%}
+{% include "{{cookiecutter.yamles_folder_name}}/airflow_mode_config/standard/scheduler.cfg" %}
+{% elif cookiecutter.airflow_performance == 'large' -%}
+{% include "{{cookiecutter.yamles_folder_name}}/airflow_mode_config/large/scheduler.cfg" %}
+{%- endif %}
+        env:
+        - name: AIRFLOW__KUBERNETES__WORKER_CONTAINER_REPOSITORY
+          value: gcr.io/dsstream-airflowk8s/airflow
+        - name: AIRFLOW__KUBERNETES__WORKER_CONTAINER_TAG
+          value: latest
+        - name: AIRFLOW__KUBERNETES__NAMESPACE
+          value: {{cookiecutter.namespace}}
+        - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
+          valueFrom:
+            secretKeyRef:
+              name: secrets
+              key: airflow-backend-db-conn-string
+        - name: AIRFLOW__CORE__FERNET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: secrets
+              key: airflow-fernet-key
+        volumeMounts:
+          - mountPath: /opt/airflow/logs
+            name: airflow-logs
+        livenessProbe:
+          exec:
+            command:
+            - python3
+            - -Wignore
+            - -c
+            - |
+              from airflow.jobs.scheduler_job import SchedulerJob
+              from airflow.utils.net import get_hostname
+              import sys
+              job = SchedulerJob.most_recent_job()
+              sys.exit(0 if job.is_alive() and job.hostname == get_hostname() else 1)
+          failureThreshold: 3
+          periodSeconds: 60
+          timeoutSeconds: 5
+      securityContext:
+        runAsUser: 50000
+        fsGroup: 50000
+      volumes:
+        - name: airflow-logs
+          persistentVolumeClaim:
+            claimName: airflow-logs-pvc
+

@@ -1,0 +1,10 @@
+{
+    "repo_name": "app repo name",
+    "app_folder_name": ["app"],
+    "yamles_folder_name": ["yamles"],
+    "namespace": ["airflow"], 
+    "airflow_performance": ["small", "standard", "large"],
+    "_copy_without_render": [
+        "{{cookiecutter.repo_name}}/{{cookiecutter.app_folder_name}}/*.cfg"
+        ]  
+}

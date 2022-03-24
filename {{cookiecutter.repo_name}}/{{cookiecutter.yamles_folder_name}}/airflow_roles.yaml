@@ -1,0 +1,25 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: {{cookiecutter.namespace}}
+  name: airflow-task-service-account
+rules:
+- apiGroups: [""] # "" indicates the core API group
+  resources: ["services", "pods", "secrets", "pods/log"]
+  verbs: ["delete", "create", "get", "watch", "list"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: airflow-task-role-binding
+  namespace: {{cookiecutter.namespace}}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: airflow-task-service-account
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: {{cookiecutter.namespace}}
+

@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: airflow-task
+  labels:
+    app.kubernetes.io/name: airflow
+spec:
+  containers:
+    - args: []
+      command: []
+      env:
+      - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
+        valueFrom:
+          secretKeyRef:
+            name: secrets
+            key: airflow-backend-db-conn-string
+      - name: AIRFLOW__CORE__FERNET_KEY
+        valueFrom:
+          secretKeyRef:
+            name: secrets
+            key: airflow-fernet-key
+      image: dummy-image
+      imagePullPolicy: IfNotPresent
+      volumeMounts:
+        - mountPath: "/opt/airflow/logs"
+          name: airflow-logs
+      resources:
+        requests:
+          memory: 256Mi
+          cpu: 200m
+        limits:
+          memory:  256Mi
+          cpu: 200m
+      name: base
+  securityContext:
+    runAsUser: 50000
+    fsGroup: 50000
+  hostNetwork: false
+  restartPolicy: Never
+  nodeSelector:
+    "agentpool": nodepool1
+  volumes:
+    - name: airflow-logs
+      persistentVolumeClaim:
+        claimName: airflow-logs-pvc

@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{cookiecutter.namespace}}
+  name: worker-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: airflow-worker
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: airflow-worker
+    spec:
+      containers:
+      - name: airflow-worker
+        image: gcr.io/dsstream-airflowk8s/airflow:latest
+        imagePullPolicy: Always
+        args: 
+          - bash
+          - -c
+          - exec airflow celery worker
+        resources:
+{% if cookiecutter.airflow_performance == 'small' -%}
+{% include "{{cookiecutter.yamles_folder_name}}/airflow_mode_config/small/worker.cfg" %}
+{% elif cookiecutter.airflow_performance == 'standard' -%}
+{% include "{{cookiecutter.yamles_folder_name}}/airflow_mode_config/standard/worker.cfg" %}
+{% elif cookiecutter.airflow_performance == 'large' -%}
+{% include "{{cookiecutter.yamles_folder_name}}/airflow_mode_config/large/worker.cfg" %}
+{%- endif %}
+        env:
+        - name: AIRFLOW__KUBERNETES__WORKER_CONTAINER_REPOSITORY
+          value: gcr.io/dsstream-airflowk8s/ airflow
+        - name: AIRFLOW__KUBERNETES__WORKER_CONTAINER_TAG
+          value: latest
+        - name: AIRFLOW__KUBERNETES__NAMESPACE
+          value: airflow
+        - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
+          valueFrom:
+            secretKeyRef:
+              name: secrets
+              key: airflow-backend-db-conn-string
+        - name: AIRFLOW__CORE__FERNET_KEYd
+          valueFrom:
+            secretKeyRef:
+              name: secrets
+              key: airflow-fernet-key
+   
+        volumeMounts:
+          - mountPath: /opt/airflow/logs
+            name: airflow-logs
+      securityContext:
+        runAsUser: 50000
+        fsGroup: 50000
+      volumes:
+        - name: airflow-logs
+          persistentVolumeClaim:
+            claimName: airflow-logs-pvc
+

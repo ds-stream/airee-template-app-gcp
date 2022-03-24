@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{cookiecutter.namespace}}
+  name: webserver-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: airflow-webserver
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: airflow-webserver
+    spec:
+      containers:
+      - name: airflow-webserver    
+        image: gcr.io/dsstream-airflowk8s/airflow:latest
+        imagePullPolicy: Always
+        args: 
+          - bash
+          - -c
+          - exec airflow webserver | exec airflow users  create --role Admin --username admin --email admin --firstname admin --lastname admin --password admin
+        resources:
+{% if cookiecutter.airflow_performance == 'small' -%}
+{% include "{{cookiecutter.yamles_folder_name}}/airflow_mode_config/small/webserver.cfg" %}
+{% elif cookiecutter.airflow_performance == 'standard' -%}
+{% include "{{cookiecutter.yamles_folder_name}}/airflow_mode_config/standard/webserver.cfg" %}
+{% elif cookiecutter.airflow_performance == 'large' -%}
+{% include "{{cookiecutter.yamles_folder_name}}/airflow_mode_config/large/webserver.cfg" %}
+{%- endif %}
+        env:
+        - name: AIRFLOW__KUBERNETES__WORKER_CONTAINER_REPOSITORY
+          value: gcr.io/dsstream-airflowk8s/ airflow
+        - name: AIRFLOW__KUBERNETES__WORKER_CONTAINER_TAG
+          value: latest
+        - name: AIRFLOW__KUBERNETES__NAMESPACE
+          value: airflow
+        - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
+          valueFrom:
+            secretKeyRef:
+              name: secrets
+              key: airflow-backend-db-conn-string
+        - name: AIRFLOW__CORE__FERNET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: secrets
+              key: airflow-fernet-key
+      ######################################################################################       
+        # - name: AIRFLOW__OAUTH__ADMIN_USER_GROUPS
+        #   value: airflow-users@dsstream.com   # id grupy wzięte z AAD
+        # - name: AIRFLOW__OAUTH__USER_GROUPS
+        #   value: airflow-users@dsstream.com
+        # - name: AIRFLOW__OAUTH__CLIENT_ID
+        #   value: 892009318355-0s2q0pnhes59gpm18di6uaben7f3d3u7.apps.googleusercontent.com   # endpoint z app registration
+        # - name: AIRFLOW__OAUTH__CLIENT_SECRET
+        #   value: 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 
+      ######################################################################################
+        volumeMounts:
+          - mountPath: /opt/airflow/logs
+            name: airflow-logs
+      securityContext:
+        runAsUser: 50000
+        fsGroup: 50000
+      volumes:
+        - name: airflow-logs
+          persistentVolumeClaim:
+            claimName: airflow-logs-pvc
+
+
