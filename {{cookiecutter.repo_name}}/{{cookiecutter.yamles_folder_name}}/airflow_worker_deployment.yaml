@@ -60,5 +60,5 @@ spec:
       volumes:
         - name: airflow-logs
           persistentVolumeClaim:
-            claimName: airflow-logs-pvc
+            claimName: airflow-logs-pvc-worker
 
