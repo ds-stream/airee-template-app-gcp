@@ -6,6 +6,15 @@ metadata:
   labels:
     app: celery
 spec:
+  override:
+    statefulSet:
+      spec:
+        template:
+          spec:
+            nodeSelector:
+              "purpose": {{cookiecutter._nodeSelectorPurposeAdditional}}
+            containers: []
+            securityContext: {}
   replicas: 1
   resources:
     requests:
