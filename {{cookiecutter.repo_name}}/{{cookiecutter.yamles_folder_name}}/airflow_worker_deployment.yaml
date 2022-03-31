@@ -17,6 +17,11 @@ spec:
     spec:
       nodeSelector:
         "purpose": {{cookiecutter._nodeSelectorPurposeWorker}}
+      tolerations:
+      - key: "purpose"
+        operator: "Equal"
+        value: "{{cookiecutter._nodeSelectorPurposeWorker}}"
+        effect: "NoSchedule"   
       containers:
       - name: airflow-worker
         image: gcr.io/dsstream-airflowk8s/airflow:latest
