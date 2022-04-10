@@ -2,12 +2,9 @@ name: Deploy airflow pods
 on: push
 
 env:
-  GCP_PROJECT: dsstream-airflowk8s
-  CLUSTER_NAME: airflow-cluster
-  REGION: us-central1
-  TESTGCP_PROJECT: "{{cookiecutter.project_id}}"
-  TESTCLUSTER_NAME: "{{cookiecutter.cluster_name}}"
-  TESTREGION: "{{cookiecutter.region}}"
+  GCP_PROJECT: "{{cookiecutter.project_id}}"
+  CLUSTER_NAME: "{{cookiecutter.cluster_name}}"
+  REGION: "{{cookiecutter.region}}"
 
 jobs:
   initialization:
