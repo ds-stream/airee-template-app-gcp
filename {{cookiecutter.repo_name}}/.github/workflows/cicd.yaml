@@ -1,0 +1,27 @@
+name: Deploy airflow pods
+on: push
+
+env:
+  GCP_PROJECT: dsstream-airflowk8s
+  CLUSTER_NAME: airflow-cluster
+  REGION: us-central1
+  TESTGCP_PROJECT: "{{cookiecutter.project_id}}"
+  TESTCLUSTER_NAME: "{{cookiecutter.cluster_name}}"
+  TESTREGION: "{{cookiecutter.region}}"
+
+jobs:
+  initialization:
+    runs-on: self-hosted
+    steps:
+    - name: authorize gcp
+      run: gcloud auth activate-service-account ${GOOGLE_IMPERSONATE_SERVICE_ACCOUNT} --key-file=${GOOGLE_APPLICATION_CREDENTIALS}
+    - name: set default project
+      run: gcloud config set project ${GCP_PROJECT}
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: check kubernetes connection
+      run: gcloud container clusters get-credentials ${CLUSTER_NAME} --region ${REGION} --project ${GCP_PROJECT}
+    - name: depoy airee objects
+      run: sh gcp_main.sh
+    - name: check webserver ip
+      run: kubectl get services -n airflow | grep airflow-webserver

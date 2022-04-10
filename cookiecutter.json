@@ -1,5 +1,8 @@
 {
     "repo_name": "app repo name",
+    "project_id": ["dsstream-airflowk8s"],
+    "region": ["us-central1","us-east4", "us-west1", "europe-central2","europe-west2", "asia-east1", "northamerica-northeast1", "northamerica-northeast2","southamerica-east1","southamerica-west1"],
+    "cluster_name": "airflow-cluster",
     "app_folder_name": ["app"],
     "yamles_folder_name": ["yamles"],
     "namespace": ["airflow"], 
