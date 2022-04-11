@@ -24,3 +24,5 @@ jobs:
       run: kubectl get service airflow-webserver -n airflow
     - name: check webserver ip
       run: sleep 60 && kubectl get service airflow-webserver -n airflow
+      env: 
+        TF_VAR_github_token: {{ secrets.TF_VAR_github_token }}
