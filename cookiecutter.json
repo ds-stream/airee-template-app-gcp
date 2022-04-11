@@ -7,6 +7,8 @@
     "yamles_folder_name": ["yamles"],
     "namespace": ["airflow"], 
     "airflow_performance": ["small", "standard", "large"],
+    "workspace": "test",
+    "env":"dev",
     "_nodeSelectorPurposeAdditional": "additional",
     "_nodeSelectorPurposeWorker": "worker",
     "_nodeSelectorPurposeWebserver": "webserver",
