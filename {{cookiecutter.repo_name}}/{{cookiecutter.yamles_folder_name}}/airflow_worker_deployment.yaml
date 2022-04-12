@@ -4,7 +4,11 @@ metadata:
   namespace: {{cookiecutter.namespace}}
   name: worker-deployment
 spec:
+  {% if cookiecutter.airflow_performance == 'small' -%}
+  replicas: 2
+  {% else -%}
   replicas: 1
+  {%- endif %}
   selector:
     matchLabels:
       app: airflow-worker
@@ -15,6 +19,8 @@ spec:
       labels:
         app: airflow-worker
     spec:
+      {% if cookiecutter.airflow_performance == 'micro' -%} 
+      {% else -%}
       nodeSelector:
         "purpose": {{cookiecutter._nodeSelectorPurposeWorker}}
       tolerations:
@@ -22,6 +28,7 @@ spec:
         operator: "Equal"
         value: "{{cookiecutter._nodeSelectorPurposeWorker}}"
         effect: "NoSchedule"   
+      {%- endif %}
       containers:
       - name: airflow-worker
         image: gcr.io/dsstream-airflowk8s/airflow:latest

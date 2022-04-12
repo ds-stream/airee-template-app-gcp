@@ -15,13 +15,16 @@ spec:
       labels:
         app: airflow-scheduler
     spec:
+      {% if cookiecutter.airflow_performance == 'micro' -%} 
+      {% else -%}
       nodeSelector:
-        "purpose": {{cookiecutter._nodeSelectorPurposeScheduler}}
+        "purpose": {{cookiecutter._nodeSelectorPurposeWorker}}
       tolerations:
       - key: "purpose"
         operator: "Equal"
-        value: "{{cookiecutter._nodeSelectorPurposeScheduler}}"
-        effect: "NoSchedule"  
+        value: "{{cookiecutter._nodeSelectorPurposeWorker}}"
+        effect: "NoSchedule"   
+      {%- endif %} 
       containers:
       - name: airflow-scheduler
         image: gcr.io/dsstream-airflowk8s/airflow:latest

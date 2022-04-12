@@ -14,14 +14,12 @@ spec:
     metadata:
       labels:
         app: airflow-webserver
-    spec:
+    spec: 
+      {% if cookiecutter.airflow_performance == 'micro' -%} 
+      {% else -%}
       nodeSelector:
         "purpose": {{cookiecutter._nodeSelectorPurposeWebserver}}
-      tolerations:
-      - key: "purpose"
-        operator: "Equal"
-        value: "{{cookiecutter._nodeSelectorPurposeWebserver}}"
-        effect: "NoSchedule"   
+      {%- endif %}
       containers:
       - name: airflow-webserver    
         image: gcr.io/dsstream-airflowk8s/airflow:latest

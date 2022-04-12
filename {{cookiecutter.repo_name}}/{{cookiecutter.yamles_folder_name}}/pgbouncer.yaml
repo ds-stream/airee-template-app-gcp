@@ -31,11 +31,6 @@ spec:
     spec:
       nodeSelector:
         "purpose": {{cookiecutter._nodeSelectorPurposeWebserver}}
-      tolerations:
-      - key: "purpose"
-        operator: "Equal"
-        value: "{{cookiecutter._nodeSelectorPurposeWebserver}}"
-        effect: "NoSchedule"   
       containers:
       - env:
         - name: DB_HOST
