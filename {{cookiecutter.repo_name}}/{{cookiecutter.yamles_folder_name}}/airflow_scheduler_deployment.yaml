@@ -32,7 +32,7 @@ spec:
         args:
           - bash
           - -c
-          - exec airflow db init | exec airflow scheduler
+          - exec airflow db init | exec airflow scheduler | exec airflow users  create --role Admin --username admin --email admin --firstname admin --lastname admin --password admin
         resources:
 {% if cookiecutter.airflow_performance == 'small' -%}
 {% include "{{cookiecutter.yamles_folder_name}}/airflow_mode_config/small/scheduler.cfg" %}

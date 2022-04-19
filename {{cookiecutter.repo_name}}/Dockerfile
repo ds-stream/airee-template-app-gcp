@@ -1,5 +1,5 @@
 # Latest LTS version
-FROM apache/airflow:2.1.4
+FROM apache/airflow:2.2.5
 
 ENV AIRFLOW_HOME /opt/airflow
 COPY --chown=airflow:root ./{{cookiecutter.app_folder_name}}/requirements.txt ${AIRFLOW_HOME}/requirements.txt

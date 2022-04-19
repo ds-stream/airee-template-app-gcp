@@ -22,12 +22,12 @@ spec:
       {%- endif %}
       containers:
       - name: airflow-webserver    
-        image: gcr.io/dsstream-airflowk8s/airflow:latest
+        image: gcr.io/dsstream-airflowk8s/airflow:webserver
         imagePullPolicy: Always
         args: 
           - bash
           - -c
-          - exec airflow webserver | exec airflow users  create --role Admin --username admin --email admin --firstname admin --lastname admin --password admin
+          - exec airflow webserver
         resources:
 {% if cookiecutter.airflow_performance == 'small' -%}
 {% include "{{cookiecutter.yamles_folder_name}}/airflow_mode_config/small/webserver.cfg" %}
