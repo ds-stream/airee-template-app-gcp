@@ -57,7 +57,7 @@ spec:
             secretKeyRef:
               name: secrets
               key: airflow-backend-db-conn-string
-        - name: AIRFLOW__CORE__FERNET_KEYd
+        - name: AIRFLOW__CORE__FERNET_KEY
           valueFrom:
             secretKeyRef:
               name: secrets
