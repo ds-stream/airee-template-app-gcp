@@ -5,9 +5,9 @@ metadata:
   name: worker-deployment
 spec:
   {% if cookiecutter.airflow_performance == 'small' -%}
-  replicas: 2
-  {% else -%}
   replicas: 1
+  {% else -%}
+  replicas: 2
   {%- endif %}
   selector:
     matchLabels:
@@ -46,6 +46,8 @@ spec:
 {% include "{{cookiecutter.yamles_folder_name}}/airflow_mode_config/large/worker.cfg" %}
 {%- endif %}
         env:
+        - name: AIRFLOW__LOGGING__BASE_LOG_FOLDER
+          value: /opt/airflow/airflow_logs
         - name: AIRFLOW__KUBERNETES__WORKER_CONTAINER_REPOSITORY
           value: gcr.io/dsstream-airflowk8s/ airflow
         - name: AIRFLOW__KUBERNETES__WORKER_CONTAINER_TAG
@@ -64,13 +66,13 @@ spec:
               key: airflow-fernet-key
    
         volumeMounts:
-          - mountPath: /opt/airflow/logs
+          - mountPath: /opt/airflow/airflow_logs
             name: airflow-logs
       securityContext:
-        runAsUser: 50000
-        fsGroup: 50000
+        runAsUser: 0
+        fsGroup: 0
       volumes:
         - name: airflow-logs
           persistentVolumeClaim:
-            claimName: airflow-logs-pvc-worker
+            claimName: nfs-pvc
 

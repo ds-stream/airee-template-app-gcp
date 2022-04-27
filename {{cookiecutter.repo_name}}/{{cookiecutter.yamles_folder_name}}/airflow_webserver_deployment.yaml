@@ -37,6 +37,8 @@ spec:
 {% include "{{cookiecutter.yamles_folder_name}}/airflow_mode_config/large/webserver.cfg" %}
 {%- endif %}
         env:
+        - name: AIRFLOW__LOGGING__BASE_LOG_FOLDER
+          value: /opt/airflow/airflow_logs
         - name: AIRFLOW__KUBERNETES__WORKER_CONTAINER_REPOSITORY
           value: gcr.io/dsstream-airflowk8s/ airflow
         - name: AIRFLOW__KUBERNETES__WORKER_CONTAINER_TAG
@@ -64,14 +66,14 @@ spec:
         #   value: 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 
       ######################################################################################
         volumeMounts:
-          - mountPath: /opt/airflow/logs
+          - mountPath: /opt/airflow/airflow_logs
             name: airflow-logs
       securityContext:
-        runAsUser: 50000
-        fsGroup: 50000
+        runAsUser: 0
+        fsGroup: 0
       volumes:
         - name: airflow-logs
           persistentVolumeClaim:
-            claimName: airflow-logs-pvc-webserver
+            claimName: nfs-pvc
 
 
