@@ -18,11 +18,11 @@ spec:
       {% if cookiecutter.airflow_performance == 'micro' -%} 
       {% else -%}
       nodeSelector:
-        "purpose": {{cookiecutter._nodeSelectorPurposeWorker}}
+        "purpose": {{cookiecutter._nodeSelectorPurposeWebserver}}
       tolerations:
       - key: "purpose"
         operator: "Equal"
-        value: "{{cookiecutter._nodeSelectorPurposeWorker}}"
+        value: "{{cookiecutter._nodeSelectorPurposeWebserver}}"
         effect: "NoSchedule"   
       {%- endif %} 
       containers:

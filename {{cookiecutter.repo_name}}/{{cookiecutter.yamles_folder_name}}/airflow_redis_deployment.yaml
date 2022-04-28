@@ -1,3 +1,14 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: redis-config-map
+  namespace: {{cookiecutter.namespace}}
+data:
+  redis-config: |
+    maxmemory 50mb
+    maxmemory-policy allkeys-lru
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -19,7 +30,10 @@ spec:
         "purpose": {{cookiecutter._nodeSelectorPurposeWebserver}}  
       containers:
       - name: airflow-redis
-        image: redis
+        image: redis:6.2.6-alpine
+        command:
+          - redis-server
+          - "/config/redis.conf"
         imagePullPolicy: Always
         resources:
           requests:
@@ -30,6 +44,19 @@ spec:
             cpu: "0.1"
         ports:
         - containerPort: 6379
+                volumeMounts:
+        - mountPath: /data
+          name: airflow-redis
+        - mountPath: /config
+          name: airflow-redis-config
+      volumes:
+        - name: airflow-redis
+        - name: airflow-redis-config
+          configMap:
+            name: redis-config-map
+            items:
+            - key: redis-config
+              path: redis.conf
 ---
 apiVersion: v1
 kind: Service
