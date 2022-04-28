@@ -1,0 +1,31 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta1
+kind: ImagePolicy
+metadata:
+  name: web-policy
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: airee
+  filterTags:
+  # to change in order to cicd image build
+    pattern: '.*(web)-(?P<timestamp>.*)Z$'
+    extract: '$timestamp'
+  policy:
+     numerical:
+      order: asc
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta1
+kind: ImagePolicy
+metadata:
+  name: worker-policy
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: airee
+  filterTags:
+  # to change in order to cicd image build
+    pattern: '.*(web|worker)-(?P<timestamp>.*)Z$'
+    extract: '$timestamp'
+  policy:
+     numerical:
+      order: asc

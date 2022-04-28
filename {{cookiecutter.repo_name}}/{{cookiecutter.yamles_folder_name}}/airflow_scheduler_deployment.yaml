@@ -27,7 +27,7 @@ spec:
       {%- endif %} 
       containers:
       - name: airflow-scheduler
-        image: gcr.io/dsstream-airflowk8s/airflow:latest
+        image: airflow-scheduler-worker
         imagePullPolicy: Always
         args:
           - bash

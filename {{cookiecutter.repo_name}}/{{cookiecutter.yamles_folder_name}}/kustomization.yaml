@@ -11,3 +11,10 @@ resources:
   - airflow_scheduler_deployment.yaml
   - airflow_worker_deployment.yaml
   - airflow_webserver_deployment.yaml
+images:
+- name: airflow-scheduler-worker # need to be parametrize
+  newName: gcr.io/dsstream-airflowk8s/airflow # {"$imagepolicy": "flux-system:web-policy:name"}
+  newTag: latest # {"$imagepolicy": "flux-system:web-policy:tag"}
+- name: airflow-webserver # need to be parametrize
+  newName: gcr.io/dsstream-airflowk8s/airflow # {"$imagepolicy": "flux-system:worker-policy:name"}
+  newTag: latest # {"$imagepolicy": "flux-system:worker-policy:tag"}

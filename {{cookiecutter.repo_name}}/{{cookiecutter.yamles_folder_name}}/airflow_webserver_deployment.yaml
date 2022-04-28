@@ -22,7 +22,7 @@ spec:
       {%- endif %}
       containers:
       - name: airflow-webserver    
-        image: gcr.io/dsstream-airflowk8s/airflow:webserver
+        image: airflow-webserver
         imagePullPolicy: Always
         args: 
           - bash
