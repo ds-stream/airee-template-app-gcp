@@ -10,7 +10,7 @@ spec:
   interval: 1m
   update:
     strategy: Setters
-    path: ./yamles
+    path: ./{{cookiecutter.yamles_folder_name}}
   git:
     checkout:
       ref:
