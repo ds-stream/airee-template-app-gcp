@@ -4,5 +4,5 @@ metadata:
   name: airee
   namespace: flux-system
 spec:
-  image: gcr.io/dsstream-airflowk8s/airflow # to parametrize
+  image: gcr.io/dsstream-airflowk8s/{{cookiecutter.workspace}}
   interval: 1m0s
