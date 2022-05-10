@@ -29,10 +29,8 @@ spec:
       - name: airflow-scheduler
         image: airflow-scheduler-worker
         imagePullPolicy: Always
-        args:
-          - bash
-          - -c
-          - exec airflow db init | exec airflow scheduler | exec airflow users  create --role Admin --username admin --email admin --firstname admin --lastname admin --password admin
+        command: ["/bin/sh","-c"]
+        args: ["airflow db init; airflow users  create --role Admin --username admin --email admin --firstname admin --lastname admin --password admin; airflow scheduler"]
         resources:
 {% if cookiecutter.airflow_performance == 'small' -%}
 {% include "{{cookiecutter.yamles_folder_name}}/airflow_mode_config/small/scheduler.cfg" %}
@@ -79,8 +77,8 @@ spec:
           periodSeconds: 60
           timeoutSeconds: 5
       securityContext:
-        runAsUser: 0
-        fsGroup: 0
+        runAsUser: 50000
+        fsGroup: 50000
       volumes:
         - name: airflow-logs
           persistentVolumeClaim:
