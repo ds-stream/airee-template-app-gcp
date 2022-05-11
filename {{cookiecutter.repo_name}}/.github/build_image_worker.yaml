@@ -1,8 +1,9 @@
 name: Build image worker
-on:
-  push:
-    paths:
-      - 'app/**'
+# Trigger only workspace repo
+# on:
+#   push:
+#     paths:
+#       - 'app/**'
 
 jobs:
   rebuild_image_worker:
@@ -11,11 +12,11 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
     - name: Authorization
-      run: docker login -u _json_key --password-stdin https://gcr.io < ${GOOGLE_APPLICATION_CREDENTIALS}
+      run: gcloud auth configure-docker gcr.io
     - name: Get timestamp
       run: echo "TIMESTAMP_IMAGES=$(date "+%Y%m%d%H%M")" >> $GITHUB_ENV;
     - name: Clone workspace repo
-      run: rm -rf dags; git clone https://oauth2:${PAT_TOKEN}@github.com/DsAirKube/{{cookiecutter.workspace}}_workspace_data_dev.git dags
+      run: rm -rf dags; git clone https://oauth2:${PAT_TOKEN}@github.com/{{cookiecutter.org}}/{{cookiecutter.workspace}}_workspace_data_dev.git dags
     - name: Move dags
       run: rm -rf app/dags 2>/dev/null; mv dags/dags app/.
     - name: Docker build
