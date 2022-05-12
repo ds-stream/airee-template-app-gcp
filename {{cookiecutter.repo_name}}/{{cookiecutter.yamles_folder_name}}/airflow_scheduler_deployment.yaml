@@ -25,6 +25,13 @@ spec:
         value: "{{cookiecutter._nodeSelectorPurposeWebserver}}"
         effect: "NoSchedule"   
       {%- endif %} 
+      initContainers:
+      - name: nfs-permission-fix
+        image: alpine:latest
+        command: ["/bin/sh", "-c","/bin/chown -R 50000:0 /opt/airflow/"]
+        volumeMounts:
+        - name: airflow-logs
+          mountPath: "/opt/airflow/airflow_logs"
       containers:
       - name: airflow-scheduler
         image: airflow-scheduler-worker
@@ -76,11 +83,7 @@ spec:
           failureThreshold: 3
           periodSeconds: 60
           timeoutSeconds: 5
-      securityContext:
-        runAsUser: 50000
-        fsGroup: 50000
       volumes:
         - name: airflow-logs
           persistentVolumeClaim:
             claimName: nfs-pvc
-

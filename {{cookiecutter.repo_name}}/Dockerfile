@@ -7,12 +7,10 @@ COPY ./{{cookiecutter.app_folder_name}}/ ${AIRFLOW_HOME}
 COPY ./{{cookiecutter.yamles_folder_name}}/airflow_pod_template.yaml ${AIRFLOW_HOME}/airflow_pod_template.yaml
 
 USER root
-RUN chown airflow:root ${AIRFLOW_HOME}
-RUN chown airflow:root ${AIRFLOW_HOME}/requirements.txt
-RUN chown airflow:root ${AIRFLOW_HOME}/airflow_pod_template.yaml
+RUN chown -R airflow:root ${AIRFLOW_HOME}
 USER airflow
 
 RUN pip install --upgrade pip
-RUN pip install 'apache-airflow[google,postgres]'
+RUN pip install 'apache-airflow[google,postgres]==2.2.5'
 RUN pip install 'plyvel==1.4.0'
 RUN pip install -r ${AIRFLOW_HOME}/requirements.txt
