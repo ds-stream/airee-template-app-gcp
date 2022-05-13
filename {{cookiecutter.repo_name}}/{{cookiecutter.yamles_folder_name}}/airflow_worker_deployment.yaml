@@ -5,9 +5,11 @@ metadata:
   name: worker-deployment
 spec:
   {% if cookiecutter.airflow_performance == 'small' -%}
-  replicas: 1
-  {% else -%}
   replicas: 2
+  {% elif cookiecutter.airflow_performance == 'standard' -%}
+  replicas: 4
+  {% else -%}
+  replicas: 8
   {%- endif %}
   selector:
     matchLabels:
@@ -19,16 +21,13 @@ spec:
       labels:
         app: airflow-worker
     spec:
-      {% if cookiecutter.airflow_performance == 'micro' -%} 
-      {% else -%}
       nodeSelector:
         "purpose": {{cookiecutter._nodeSelectorPurposeWorker}}
       tolerations:
       - key: "purpose"
         operator: "Equal"
         value: "{{cookiecutter._nodeSelectorPurposeWorker}}"
-        effect: "NoSchedule"   
-      {%- endif %}
+        effect: "NoSchedule"
       containers:
       - name: airflow-worker
         image: airflow-scheduler-worker
