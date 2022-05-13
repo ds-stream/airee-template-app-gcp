@@ -24,10 +24,8 @@ spec:
       - name: airflow-webserver    
         image: airflow-webserver
         imagePullPolicy: Always
-        args: 
-          - bash
-          - -c
-          - exec airflow webserver
+        command: ["/bin/sh"]
+        args: ["-c","airflow webserver"]
         resources:
 {% if cookiecutter.airflow_performance == 'small' -%}
 {% include "{{cookiecutter.yamles_folder_name}}/airflow_mode_config/small/webserver.cfg" %}
@@ -69,8 +67,8 @@ spec:
           - mountPath: /opt/airflow/airflow_logs
             name: airflow-logs
       securityContext:
-        runAsUser: 0
-        fsGroup: 0
+        runAsUser: 50000
+        fsGroup: 50000
       volumes:
         - name: airflow-logs
           persistentVolumeClaim:

@@ -18,21 +18,26 @@ spec:
       {% if cookiecutter.airflow_performance == 'micro' -%} 
       {% else -%}
       nodeSelector:
-        "purpose": {{cookiecutter._nodeSelectorPurposeWorker}}
+        "purpose": {{cookiecutter._nodeSelectorPurposeWebserver}}
       tolerations:
       - key: "purpose"
         operator: "Equal"
-        value: "{{cookiecutter._nodeSelectorPurposeWorker}}"
+        value: "{{cookiecutter._nodeSelectorPurposeWebserver}}"
         effect: "NoSchedule"   
       {%- endif %} 
+      initContainers:
+      - name: nfs-permission-fix
+        image: alpine:latest
+        command: ["/bin/sh", "-c","/bin/chown -R 50000:0 /opt/airflow/"]
+        volumeMounts:
+        - name: airflow-logs
+          mountPath: "/opt/airflow/airflow_logs"
       containers:
       - name: airflow-scheduler
         image: airflow-scheduler-worker
         imagePullPolicy: Always
-        args:
-          - bash
-          - -c
-          - exec airflow db init | exec airflow scheduler | exec airflow users  create --role Admin --username admin --email admin --firstname admin --lastname admin --password admin
+        command: ["/bin/sh","-c"]
+        args: ["airflow db init; airflow users  create --role Admin --username admin --email admin --firstname admin --lastname admin --password admin; airflow scheduler"]
         resources:
 {% if cookiecutter.airflow_performance == 'small' -%}
 {% include "{{cookiecutter.yamles_folder_name}}/airflow_mode_config/small/scheduler.cfg" %}
@@ -78,11 +83,7 @@ spec:
           failureThreshold: 3
           periodSeconds: 60
           timeoutSeconds: 5
-      securityContext:
-        runAsUser: 0
-        fsGroup: 0
       volumes:
         - name: airflow-logs
           persistentVolumeClaim:
             claimName: nfs-pvc
-
