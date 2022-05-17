@@ -57,6 +57,8 @@ spec:
           value: transaction
         - name: SERVER_RESET_QUERY
           value: DISCARD ALL
+        - name: MAX_CLIENT_CONN
+          value: 128
         image: edoburu/pgbouncer:1.15.0
         lifecycle:
           preStop:
