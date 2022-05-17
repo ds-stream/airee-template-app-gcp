@@ -1,0 +1,70 @@
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: wi-user-sa-{{cookiecutter.workspace}}
+  namespace: flux-system
+rules:
+- apiGroups: [""]
+  resources:
+  - secrets
+  verbs:
+  - get
+  - create
+  - patch
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: wi-user-sa-{{cookiecutter.workspace}}
+  namespace: flux-system
+subjects:
+- kind: ServiceAccount
+  name: wi-user-sa-{{cookiecutter.workspace}}
+roleRef:
+  kind: Role
+  name: wi-user-sa-{{cookiecutter.workspace}}
+  apiGroup: ""
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  annotations:
+    iam.gke.io/gcp-service-account: wi-user-sa-{{cookiecutter.workspace}}7@dsstream-airflowk8s.iam.gserviceaccount.com
+  name: wi-user-sa-{{cookiecutter.workspace}}
+  namespace: flux-system
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: wi-user-sa-{{cookiecutter.workspace}}
+  namespace: flux-system
+spec:
+  suspend: false
+  schedule: "*/45 * * * *"
+  failedJobsHistoryLimit: 1
+  successfulJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: wi-user-sa-{{cookiecutter.workspace}}
+          restartPolicy: Never
+          containers:
+          - image: google/cloud-sdk
+            name: create-secret
+            imagePullPolicy: IfNotPresent
+            env:
+            - name: SECRET_NAME
+              value: gcr-credentials
+            - name: GCR_REGISTRY
+              value: gcr.io
+            command:
+            - /bin/bash
+            - -ce
+            - |-
+              kubectl create secret docker-registry $SECRET_NAME \
+                --dry-run=client \
+                --docker-server="$GCR_REGISTRY" \
+                --docker-username=oauth2accesstoken \
+                --docker-password="$(gcloud auth print-access-token)" \
+                -o yaml | kubectl apply -f -

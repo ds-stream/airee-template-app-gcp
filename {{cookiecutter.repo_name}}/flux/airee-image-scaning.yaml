@@ -6,3 +6,5 @@ metadata:
 spec:
   image: gcr.io/dsstream-airflowk8s/{{cookiecutter.workspace}}
   interval: 1m0s
+  secretRef:
+    name: gcr-credentials
