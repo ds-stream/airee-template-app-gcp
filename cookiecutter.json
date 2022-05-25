@@ -10,6 +10,7 @@
     "workspace": "test",
     "env": "dev",
     "org": "DsAirKube",
+    "pgb_max_client_conn": "100",
     "_nodeSelectorPurposeAdditional": "additional",
     "_nodeSelectorPurposeWorker": "worker",
     "_nodeSelectorPurposeWebserver": "webserver",
