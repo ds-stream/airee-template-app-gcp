@@ -57,6 +57,13 @@ spec:
           value: transaction
         - name: SERVER_RESET_QUERY
           value: DISCARD ALL
+        - name: MAX_CLIENT_CONN
+          value: "{{cookiecutter.pgb_max_client_conn}}"
+        - name: ADMIN_USERS
+          valueFrom:
+            configMapKeyRef:
+              key: POSTGRES_USER
+              name:  postgres-config 
         image: edoburu/pgbouncer:1.15.0
         lifecycle:
           preStop:
