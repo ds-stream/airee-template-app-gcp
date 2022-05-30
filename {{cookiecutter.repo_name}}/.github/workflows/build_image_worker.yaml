@@ -5,7 +5,7 @@ on:
 
 jobs:
   rebuild_image_worker:
-    runs-on: self-hosted
+    runs-on: azure
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
