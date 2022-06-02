@@ -17,16 +17,6 @@ spec:
     - args: []
       command: []
       env:
-      - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
-        valueFrom:
-          secretKeyRef:
-            name: secrets
-            key: airflow-backend-db-conn-string
-      - name: AIRFLOW__CORE__FERNET_KEY
-        valueFrom:
-          secretKeyRef:
-            name: secrets
-            key: airflow-fernet-key
       image: dummy-image
       imagePullPolicy: IfNotPresent
       volumeMounts:

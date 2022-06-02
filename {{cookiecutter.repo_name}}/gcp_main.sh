@@ -2,7 +2,6 @@ kubectl apply -f ./{{cookiecutter.yamles_folder_name}}/airflow_nfsserver_deploym
 kubectl apply -f ./{{cookiecutter.yamles_folder_name}}/airflow_service.yaml
 kubectl apply -f ./{{cookiecutter.yamles_folder_name}}/pgbouncer.yaml
 kubectl apply -f ./{{cookiecutter.yamles_folder_name}}/airflow_roles.yaml
-kubectl apply -f ./{{cookiecutter.yamles_folder_name}}/airflow_secret.yaml
 kubectl apply -f ./{{cookiecutter.yamles_folder_name}}/airflow_redis_deployment.yaml
 kubectl apply -f ./{{cookiecutter.yamles_folder_name}}/airflow_nfs_pvc.yaml
 kubectl apply -f ./{{cookiecutter.yamles_folder_name}}/airflow_scheduler_deployment.yaml

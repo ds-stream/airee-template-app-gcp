@@ -37,7 +37,7 @@ spec:
         image: airflow-scheduler-worker
         imagePullPolicy: Always
         command: ["/bin/sh","-c"]
-        args: ["airflow db init; airflow users  create --role Admin --username admin --email admin --firstname admin --lastname admin --password admin; airflow scheduler"]
+        args: ["airflow db init; airflow users delete -u admin; airflow users create --role Admin --username admin --email admin --firstname admin --lastname admin --password $admin_pass; unset admin_pass; airflow scheduler"]
         resources:
 {% if cookiecutter.airflow_performance == 'small' -%}
 {% include "{{cookiecutter.yamles_folder_name}}/airflow_mode_config/small/scheduler.cfg" %}
@@ -55,16 +55,6 @@ spec:
           value: latest
         - name: AIRFLOW__KUBERNETES__NAMESPACE
           value: {{cookiecutter.namespace}}
-        - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
-          valueFrom:
-            secretKeyRef:
-              name: secrets
-              key: airflow-backend-db-conn-string
-        - name: AIRFLOW__CORE__FERNET_KEY
-          valueFrom:
-            secretKeyRef:
-              name: secrets
-              key: airflow-fernet-key
         volumeMounts:
           - mountPath: /opt/airflow/airflow_logs
             name: airflow-logs

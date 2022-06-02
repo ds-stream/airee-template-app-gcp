@@ -22,6 +22,6 @@ jobs:
     - name: Move dags
       run: rm -rf app/dags 2>/dev/null; mv dags/dags app/.
     - name: Docker build
-      run: docker build . -t gcr.io/{{cookiecutter.project_id}}/{{cookiecutter.workspace}}:worker-${TIMESTAMP_IMAGES}00Z
+      run: docker build . --build-arg fernet_key=`gcloud secrets versions access latest --secret="{{cookiecutter.workspace}}-fernet_key"` --build-arg conn_db=`gcloud secrets versions access latest --secret="{{cookiecutter.workspace}}-postgress_conn_string"` --build-arg admin=`gcloud secrets versions access latest --secret="{{cookiecutter.workspace}}-admin_password"` -t gcr.io/{{cookiecutter.project_id}}/{{cookiecutter.workspace}}:worker-${TIMESTAMP_IMAGES}00Z
     - name: Docker push
       run: docker push gcr.io/{{cookiecutter.project_id}}/{{cookiecutter.workspace}}:worker-${TIMESTAMP_IMAGES}00Z

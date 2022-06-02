@@ -5,7 +5,6 @@ resources:
   - airflow_service.yaml
   - pgbouncer.yaml
   - airflow_roles.yaml
-  - airflow_secret.yaml
   - airflow_redis_deployment.yaml
   - airflow_nfs_pvc.yaml
   - airflow_scheduler_deployment.yaml

@@ -50,18 +50,7 @@ spec:
         - name: AIRFLOW__KUBERNETES__WORKER_CONTAINER_TAG
           value: latest
         - name: AIRFLOW__KUBERNETES__NAMESPACE
-          value: airflow
-        - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
-          valueFrom:
-            secretKeyRef:
-              name: secrets
-              key: airflow-backend-db-conn-string
-        - name: AIRFLOW__CORE__FERNET_KEY
-          valueFrom:
-            secretKeyRef:
-              name: secrets
-              key: airflow-fernet-key
-   
+          value: {{cookiecutter.namespace}}
         volumeMounts:
           - mountPath: /opt/airflow/airflow_logs
             name: airflow-logs
