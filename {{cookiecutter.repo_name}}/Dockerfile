@@ -12,6 +12,7 @@ ENV AIRFLOW__CELERY__RESULT_BACKEND="db+postgresql://$conn_db"
 ENV AIRFLOW__CORE__SQL_ALCHEMY_CONN="postgresql+psycopg2://$conn_db"
 
 COPY ./{{cookiecutter.app_folder_name}}/ ${AIRFLOW_HOME}
+COPY ./{{cookiecutter.yamles_folder_name}}/airflow_pod_template.yaml ${AIRFLOW_HOME}/airflow_pod_template.yaml
 
 USER root
 RUN chown -R airflow:root ${AIRFLOW_HOME}
