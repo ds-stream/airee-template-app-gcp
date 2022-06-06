@@ -22,6 +22,22 @@ jobs:
       run: rm -rf dags; git clone https://oauth2:${PAT_TOKEN}@github.com/{{cookiecutter.org}}/{{cookiecutter.workspace}}_workspace_data_{{cookiecutter.env}}.git dags
     - name: Move dags
       run: rm -rf app/dags 2>/dev/null; mv dags/dags app/.
+    - name: Check secrets
+      run: |
+        repeat="true"
+        wait_s=30
+        max_retries=40
+        while ${repeat} ; do
+        if [ `gcloud secrets versions access latest --secret="{{cookiecutter.workspace}}-postgress_conn_string"` ] && [ `gcloud secrets versions access latest --secret="{{cookiecutter.workspace}}-admin_password"` ] && [ `gcloud secrets versions access latest --secret="{{cookiecutter.workspace}}-fernet_key"` ]
+        then
+          echo "Secrets - ok" && exit 0
+        else
+          ((i=i+1)) && echo "retries number ${i}" ; sleep ${wait_s}
+          if [ ${i} -eq ${max_retries} ] ; then
+            echo "The maximum number of retries has been reached" && exit 1
+          fi
+        fi
+        done
     - name: Docker build
       run: docker build . --build-arg fernet_key=`gcloud secrets versions access latest --secret="{{cookiecutter.workspace}}-fernet_key"` --build-arg conn_db=`gcloud secrets versions access latest --secret="{{cookiecutter.workspace}}-postgress_conn_string"` --build-arg admin=`gcloud secrets versions access latest --secret="{{cookiecutter.workspace}}-admin_password"` -t gcr.io/{{cookiecutter.project_id}}/{{cookiecutter.workspace}}:web-${TIMESTAMP_IMAGES}00Z
     - name: Docker push
