@@ -6,12 +6,10 @@ on:
 
 jobs:
   rebuild_image_webserver:
-    runs-on: azure
+    runs-on: [self-hosted,{{cookiecutter.labels}}]
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-    - name: Authorize GCP
-      run: gcloud auth activate-service-account ${GOOGLE_IMPERSONATE_SERVICE_ACCOUNT} --key-file=${GOOGLE_APPLICATION_CREDENTIALS}
     - name: Set default project
       run: gcloud config set project "{{cookiecutter.project_id}}"
     - name: Authorization docker
@@ -19,7 +17,7 @@ jobs:
     - name: Get timestamp
       run: echo "TIMESTAMP_IMAGES=$(date "+%Y%m%d%H%M")" >> $GITHUB_ENV;
     - name: Clone workspace repo
-      run: rm -rf dags; git clone https://oauth2:${PAT_TOKEN}@github.com/{{cookiecutter.org}}/{{cookiecutter.workspace}}_workspace_data_{{cookiecutter.env}}.git dags
+      run: rm -rf dags; git clone https://oauth2:{% raw %}${{ secrets.TF_VAR_GITHUB_TOKEN }}{% endraw %}@github.com/{{cookiecutter.org}}/{{cookiecutter.workspace}}_workspace_data_{{cookiecutter.env}}.git dags
     - name: Move dags
       run: rm -rf app/dags 2>/dev/null; mv dags/dags app/.
     - name: Check secrets

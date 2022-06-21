@@ -17,5 +17,6 @@
     "_nodeSelectorPurposeScheduler": "scheduler",
     "_copy_without_render": [
         "{{cookiecutter.repo_name}}/{{cookiecutter.app_folder_name}}/*.cfg"
-        ]  
+        ],
+    "labels": "airflow"
 }
