@@ -40,8 +40,8 @@ jobs:
         done
     - name: Create key and cert file
       run: |
-        cert=`gcloud secrets versions access latest --secret="aireetest-crt"`
-        key=`gcloud secrets versions access latest --secret="aireetest-crt"`
+        cert=`gcloud secrets versions access latest --secret="{{cookiecutter.cert_name}}"`
+        key=`gcloud secrets versions access latest --secret="{{cookiecutter.key_name}}"`
 
         echo $cert >> app/aireetest.com.crt
         echo $key >> app/aireetest.com.key
