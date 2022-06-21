@@ -50,7 +50,7 @@ spec:
         - name: AIRFLOW__LOGGING__BASE_LOG_FOLDER
           value: /opt/airflow/airflow_logs
         - name: AIRFLOW__KUBERNETES__WORKER_CONTAINER_REPOSITORY
-          value: gcr.io/dsstream-airflowk8s/airflow
+          value: gcr.io/{{cookiecutter.project_id}}/airflow
         - name: AIRFLOW__KUBERNETES__WORKER_CONTAINER_TAG
           value: latest
         - name: AIRFLOW__KUBERNETES__NAMESPACE
