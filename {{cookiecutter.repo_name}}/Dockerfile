@@ -1,5 +1,5 @@
  # Latest LTS version
-FROM airflowkubernetesui.azurecr.io/airflow:2.2.5
+FROM gcr.io/{{cookiecutter.project_id}}/airee-base
 
 ARG admin
 ARG fernet_key
