@@ -10,6 +10,8 @@
     "workspace": "test",
     "env": "dev",
     "org": "DsAirKube",
+    "cert_name": "Name of cert file in GCP secrets",
+    "key_name": "Name of key file in GCP secrets",
     "pgb_max_client_conn": "100",
     "_nodeSelectorPurposeAdditional": "additional",
     "_nodeSelectorPurposeWorker": "worker",
