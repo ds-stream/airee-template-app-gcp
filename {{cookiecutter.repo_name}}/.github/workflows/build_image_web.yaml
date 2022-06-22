@@ -40,11 +40,8 @@ jobs:
         done
     - name: Create key and cert file
       run: |
-        cert=`gcloud secrets versions access latest --secret="{{cookiecutter.cert_name}}"`
-        key=`gcloud secrets versions access latest --secret="{{cookiecutter.key_name}}"`
-
-        echo $cert >> app/aireetest.com.crt
-        echo $key >> app/aireetest.com.key
+        gcloud secrets versions access latest --secret="{{cookiecutter.cert_name}}"` > app/aireetest.com.crt
+        gcloud secrets versions access latest --secret="{{cookiecutter.key_name}}"` > app/aireetest.com.key
     - name: Docker build
       run: docker build . --build-arg fernet_key=`gcloud secrets versions access latest --secret="{{cookiecutter.workspace}}-fernet_key"` --build-arg conn_db=`gcloud secrets versions access latest --secret="{{cookiecutter.workspace}}-postgress_conn_string"` --build-arg admin=`gcloud secrets versions access latest --secret="{{cookiecutter.workspace}}-admin_password"` -t gcr.io/{{cookiecutter.project_id}}/{{cookiecutter.workspace}}:web-${TIMESTAMP_IMAGES}00Z
     - name: Docker push
