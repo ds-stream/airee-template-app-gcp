@@ -36,13 +36,13 @@ jobs:
           fi
         fi
         done
-    - name: Check secrets cert & key
+    - name: Check secrets cert and key
       run: |
         repeat="true"
         wait_s=30
         max_retries=40
         while ${repeat} ; do
-        if [ `gcloud secrets versions access latest --secret="{{cookiecutter.cert_name}}"` ] && [ `gcloud secrets versions access latest --secret="{{cookiecutter.key_name}}"` ]
+        if [[ `gcloud secrets versions access latest --secret="{{cookiecutter.cert_name}}"` ]] && [[ `gcloud secrets versions access latest --secret="{{cookiecutter.key_name}}"` ]]
         then
           echo "Secrets - ok" && exit 0
         else
