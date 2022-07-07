@@ -18,7 +18,7 @@ spec:
     commit:
       author:
         name: fluxbot
-        email: fluxbot@dsstream.com
+        email: fluxbot@ariee.com
       messageTemplate: |
         An automated update from FluxBot
         [ci skip]        
