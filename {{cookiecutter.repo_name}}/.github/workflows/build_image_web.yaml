@@ -20,13 +20,29 @@ jobs:
       run: rm -rf dags; git clone https://oauth2:{% raw %}${{ secrets.TF_VAR_GITHUB_TOKEN }}{% endraw %}@github.com/{{cookiecutter.org}}/{{cookiecutter.workspace}}_workspace_data_{{cookiecutter.env}}.git dags
     - name: Move dags
       run: rm -rf app/dags 2>/dev/null; mv dags/dags app/.
-    - name: Check secrets
+    - name: Check secrets postgress
       run: |
         repeat="true"
         wait_s=30
         max_retries=40
         while ${repeat} ; do
         if [ `gcloud secrets versions access latest --secret="{{cookiecutter.workspace}}-postgress_conn_string"` ] && [ `gcloud secrets versions access latest --secret="{{cookiecutter.workspace}}-admin_password"` ] && [ `gcloud secrets versions access latest --secret="{{cookiecutter.workspace}}-fernet_key"` ]
+        then
+          echo "Secrets - ok" && exit 0
+        else
+          ((i=i+1)) && echo "retries number ${i}" ; sleep ${wait_s}
+          if [ ${i} -eq ${max_retries} ] ; then
+            echo "The maximum number of retries has been reached" && exit 1
+          fi
+        fi
+        done
+    - name: Check secrets cert & key
+      run: |
+        repeat="true"
+        wait_s=30
+        max_retries=40
+        while ${repeat} ; do
+        if [ `gcloud secrets versions access latest --secret="{{cookiecutter.cert_name}}"` ] && [ `gcloud secrets versions access latest --secret="{{cookiecutter.key_name}}"` ]
         then
           echo "Secrets - ok" && exit 0
         else
