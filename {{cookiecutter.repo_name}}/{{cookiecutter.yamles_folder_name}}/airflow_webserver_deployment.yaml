@@ -15,11 +15,8 @@ spec:
       labels:
         app: airflow-webserver
     spec: 
-      {% if cookiecutter.airflow_performance == 'micro' -%} 
-      {% else -%}
       nodeSelector:
-        "purpose": {{cookiecutter._nodeSelectorPurposeWebserver}}
-      {%- endif %}
+        "purpose": "webserver"
       containers:
       - name: airflow-webserver    
         image: airflow-webserver
@@ -43,16 +40,6 @@ spec:
           value: latest
         - name: AIRFLOW__KUBERNETES__NAMESPACE
           value: {{cookiecutter.namespace}}
-      ######################################################################################       
-        # - name: AIRFLOW__OAUTH__ADMIN_USER_GROUPS
-        #   value: airflow-users@dsstream.com   # id grupy wzięte z AAD
-        # - name: AIRFLOW__OAUTH__USER_GROUPS
-        #   value: airflow-users@dsstream.com
-        # - name: AIRFLOW__OAUTH__CLIENT_ID
-        #   value: 892009318355-0s2q0pnhes59gpm18di6uaben7f3d3u7.apps.googleusercontent.com   # endpoint z app registration
-        # - name: AIRFLOW__OAUTH__CLIENT_SECRET
-        #   value: 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 
-      ######################################################################################
         volumeMounts:
           - mountPath: /opt/airflow/airflow_logs
             name: airflow-logs

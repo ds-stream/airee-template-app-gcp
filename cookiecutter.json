@@ -13,10 +13,6 @@
     "cert_name": "Name of cert file in GCP secrets",
     "key_name": "Name of key file in GCP secrets",
     "pgb_max_client_conn": "100",
-    "_nodeSelectorPurposeAdditional": "additional",
-    "_nodeSelectorPurposeWorker": "worker",
-    "_nodeSelectorPurposeWebserver": "webserver",
-    "_nodeSelectorPurposeScheduler": "scheduler",
     "_copy_without_render": [
         "{{cookiecutter.repo_name}}/{{cookiecutter.app_folder_name}}/*.cfg"
         ],

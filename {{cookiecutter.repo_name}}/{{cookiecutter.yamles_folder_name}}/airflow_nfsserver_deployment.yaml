@@ -13,11 +13,8 @@ spec:
       labels:
         role: nfs-server
     spec:
-      {% if cookiecutter.airflow_performance == 'micro' -%} 
-      {% else -%}
       nodeSelector:
-        "purpose": {{cookiecutter._nodeSelectorPurposeWebserver}}
-      {%- endif %}
+        "purpose": "webserver"
       containers:
       - name: nfs-server
         image: gcr.io/google_containers/volume-nfs:0.8

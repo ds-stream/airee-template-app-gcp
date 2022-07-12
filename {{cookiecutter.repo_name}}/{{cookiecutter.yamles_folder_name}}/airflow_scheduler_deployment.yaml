@@ -15,16 +15,13 @@ spec:
       labels:
         app: airflow-scheduler
     spec:
-      {% if cookiecutter.airflow_performance == 'micro' -%} 
-      {% else -%}
       nodeSelector:
-        "purpose": {{cookiecutter._nodeSelectorPurposeWebserver}}
+        "purpose": "webserver"
       tolerations:
       - key: "purpose"
         operator: "Equal"
-        value: "{{cookiecutter._nodeSelectorPurposeWebserver}}"
+        value: "webserver"
         effect: "NoSchedule"   
-      {%- endif %} 
       initContainers:
       - name: nfs-permission-fix
         image: alpine:latest

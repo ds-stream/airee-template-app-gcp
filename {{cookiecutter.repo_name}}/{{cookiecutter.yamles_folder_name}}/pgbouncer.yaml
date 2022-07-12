@@ -30,7 +30,7 @@ spec:
         app: pgbouncer
     spec:
       nodeSelector:
-        "purpose": {{cookiecutter._nodeSelectorPurposeWebserver}}
+        "purpose": "webserver"
       containers:
       - env:
         - name: DB_HOST
