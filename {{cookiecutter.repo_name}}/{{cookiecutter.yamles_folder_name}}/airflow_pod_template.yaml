@@ -7,11 +7,11 @@ metadata:
     app.kubernetes.io/name: airflow
 spec:
   nodeSelector:
-        "purpose": {{cookiecutter._nodeSelectorPurposeWorker}}
+        "purpose": "worker"
   tolerations:
   - key: "purpose"
     operator: "Equal"
-    value: "{{cookiecutter._nodeSelectorPurposeWorker}}"
+    value: "worker"
     effect: "NoSchedule"   
   containers:
     - args: []
