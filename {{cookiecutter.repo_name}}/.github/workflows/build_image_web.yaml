@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - 'app/**'
+  workflow_dispatch:
 
 jobs:
   rebuild_image_webserver:
