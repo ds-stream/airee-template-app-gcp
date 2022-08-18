@@ -25,3 +25,33 @@ spec:
   resources:
     requests:
       storage: 5Gi
+
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-pv-dags
+  namespace: {{cookiecutter.namespace}}
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    server: nfs-server.{{cookiecutter.namespace}}.svc.cluster.local
+    path: "/"
+
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: nfs-pvc-dags
+  namespace: {{cookiecutter.namespace}}
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: ""
+  resources:
+    requests:
+      storage: 1Gi
