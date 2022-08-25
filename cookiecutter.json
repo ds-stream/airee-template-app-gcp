@@ -16,5 +16,6 @@
     "_copy_without_render": [
         "{{cookiecutter.repo_name}}/{{cookiecutter.app_folder_name}}/*.cfg"
         ],
-    "labels": "airflow"
+    "labels": "airflow",
+    "nfs_dags": null
 }

@@ -26,7 +26,7 @@ spec:
     requests:
       storage: 5Gi
 
-
+{% if cookiecutter.nfs_dags!=None -%}
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -55,3 +55,4 @@ spec:
   resources:
     requests:
       storage: 1Gi
+{% endif -%}
