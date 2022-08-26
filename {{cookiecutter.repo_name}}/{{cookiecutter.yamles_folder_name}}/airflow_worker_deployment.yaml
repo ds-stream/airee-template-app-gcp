@@ -51,17 +51,17 @@ spec:
           value: latest
         - name: AIRFLOW__KUBERNETES__NAMESPACE
           value: {{cookiecutter.namespace}}
-{% if cookiecutter.nfs_dags!=None -%}
+        {% if cookiecutter.nfs_dags!=None -%}
         - name: AIRFLOW__CORE__DAGS_FOLDER
           value: /opt/airflow/airflow_dags
-{% endif -%}
+        {%- endif %}
         volumeMounts:
         - mountPath: /opt/airflow/airflow_logs
           name: airflow-logs
-{% if cookiecutter.nfs_dags!=None -%}
+        {% if cookiecutter.nfs_dags!=None -%}
         - mountPath: /opt/airflow/airflow_dags
           name: airflow-dags
-{% endif -%}
+        {%- endif %}
       securityContext:
         runAsUser: 50000
         fsGroup: 50000
@@ -69,9 +69,9 @@ spec:
         - name: airflow-logs
           persistentVolumeClaim:
             claimName: nfs-pvc
-{% if cookiecutter.nfs_dags!=None -%}
+        {% if cookiecutter.nfs_dags!=None -%}
         - name: airflow-dags
           persistentVolumeClaim:
             claimName: nfs-pvc-dags
-{% endif -%}
+        {%- endif %}
 

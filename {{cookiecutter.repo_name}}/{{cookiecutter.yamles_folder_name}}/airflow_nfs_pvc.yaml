@@ -38,6 +38,8 @@ kind: PersistentVolume
 metadata:
   name: nfs-pv-dags
   namespace: {{cookiecutter.namespace}}
+  labels:
+    purpose: dags
 spec:
   capacity:
     storage: 1Gi
@@ -46,8 +48,6 @@ spec:
   nfs:
     server: nfs-server.{{cookiecutter.namespace}}.svc.cluster.local
     path: "/"
-  labels:
-    purpose: dags
 
 ---
 kind: PersistentVolumeClaim
@@ -65,4 +65,4 @@ spec:
   selector:
     matchLabels:
       purpose: dags
-{% endif -%}
+{%- endif %}
