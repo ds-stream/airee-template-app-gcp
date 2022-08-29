@@ -15,7 +15,7 @@ jobs:
       run: gcloud auth configure-docker gcr.io
     - name: Get timestamp
       run: echo "TIMESTAMP_IMAGES=$(date "+%Y%m%d%H%M")" >> $GITHUB_ENV;
-    {% if cookiecutter.nfs_dags!=None -%}
+    {% if cookiecutter.nfs_dags==None -%}
     - name: Clone workspace repo
       run: rm -rf dags; git clone https://oauth2:{% raw %}${{ secrets.TF_VAR_GITHUB_TOKEN }}{% endraw %}@github.com/{{cookiecutter.org}}/{{cookiecutter.workspace}}_workspace_data_{{cookiecutter.env}}.git dags
     - name: Move dags
