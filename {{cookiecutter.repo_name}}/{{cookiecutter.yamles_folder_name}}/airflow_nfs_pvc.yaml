@@ -3,6 +3,8 @@ kind: PersistentVolume
 metadata:
   name: nfs-pv
   namespace: {{cookiecutter.namespace}}
+  labels:
+    purpose: logs
 spec:
   capacity:
     storage: 5Gi
@@ -25,3 +27,42 @@ spec:
   resources:
     requests:
       storage: 5Gi
+  selector:
+    matchLabels:
+      purpose: logs
+
+{% if cookiecutter.nfs_dags!=None -%}
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-pv-dags
+  namespace: {{cookiecutter.namespace}}
+  labels:
+    purpose: dags
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    server: nfs-server.{{cookiecutter.namespace}}.svc.cluster.local
+    path: "/"
+
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: nfs-pvc-dags
+  namespace: {{cookiecutter.namespace}}
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: ""
+  resources:
+    requests:
+      storage: 1Gi
+  selector:
+    matchLabels:
+      purpose: dags
+{%- endif %}
