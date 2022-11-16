@@ -12,7 +12,7 @@ spec:
     - ReadWriteMany
   nfs:
     server: nfs-server.{{cookiecutter.namespace}}.svc.cluster.local
-    path: "/"
+    path: "/exports/logs/"
 
 ---
 kind: PersistentVolumeClaim
@@ -47,7 +47,7 @@ spec:
     - ReadWriteMany
   nfs:
     server: nfs-server.{{cookiecutter.namespace}}.svc.cluster.local
-    path: "/"
+    path: "/exports/dags/"
 
 ---
 kind: PersistentVolumeClaim
