@@ -33,7 +33,7 @@ spec:
       volumes:
         - name: nfs-pvc
           gcePersistentDisk:
-            pdName: nfs-disk-{{cookiecutter.workspace}}
+            pdName: nfs-disk-{{cookiecutter.workspace}}-{{cookiecutter.env}}
             fsType: ext4
 
 ---

@@ -1,7 +1,7 @@
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: wi-user-sa-{{cookiecutter.workspace}}
+  name: wi-usr-{{cookiecutter.workspace}}-{{cookiecutter.env}}
   namespace: flux-system
 rules:
 - apiGroups: [""]
@@ -15,28 +15,28 @@ rules:
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: wi-user-sa-{{cookiecutter.workspace}}
+  name: wi-usr-{{cookiecutter.workspace}}-{{cookiecutter.env}}
   namespace: flux-system
 subjects:
 - kind: ServiceAccount
-  name: wi-user-sa-{{cookiecutter.workspace}}
+  name: wi-usr-{{cookiecutter.workspace}}-{{cookiecutter.env}}
 roleRef:
   kind: Role
-  name: wi-user-sa-{{cookiecutter.workspace}}
+  name: wi-usr-{{cookiecutter.workspace}}-{{cookiecutter.env}}
   apiGroup: ""
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   annotations:
-    iam.gke.io/gcp-service-account: wi-user-sa-{{cookiecutter.workspace}}@{{cookiecutter.project_id}}.iam.gserviceaccount.com
-  name: wi-user-sa-{{cookiecutter.workspace}}
+    iam.gke.io/gcp-service-account: wi-usr-{{cookiecutter.workspace}}-{{cookiecutter.env}}@{{cookiecutter.project_id}}.iam.gserviceaccount.com
+  name: wi-usr-{{cookiecutter.workspace}}-{{cookiecutter.env}}
   namespace: flux-system
 ---
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: wi-user-sa-{{cookiecutter.workspace}}
+  name: wi-usr-{{cookiecutter.workspace}}-{{cookiecutter.env}}
   namespace: flux-system
 spec:
   suspend: false
@@ -47,7 +47,7 @@ spec:
     spec:
       template:
         spec:
-          serviceAccountName: wi-user-sa-{{cookiecutter.workspace}}
+          serviceAccountName: wi-usr-{{cookiecutter.workspace}}-{{cookiecutter.env}}
           restartPolicy: Never
           containers:
           - image: google/cloud-sdk

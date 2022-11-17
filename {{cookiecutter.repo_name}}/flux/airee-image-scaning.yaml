@@ -4,7 +4,7 @@ metadata:
   name: airee
   namespace: flux-system
 spec:
-  image: gcr.io/{{cookiecutter.project_id}}/{{cookiecutter.workspace}}
+  image: gcr.io/{{cookiecutter.project_id}}/{{cookiecutter.workspace}}-{{cookiecutter.env}}
   interval: 1m0s
   secretRef:
     name: gcr-credentials
