@@ -1,5 +1,5 @@
  # Latest LTS version
-FROM gcr.io/{{cookiecutter.project_id}}/airee-base
+FROM gcr.io/{{cookiecutter.project_id}}/airee-base:latest
 
 ARG admin
 ARG fernet_key
@@ -9,7 +9,7 @@ ENV AIRFLOW_HOME /opt/airflow
 ENV admin_pass=$admin
 ENV AIRFLOW__CORE__FERNET_KEY=$fernet_key
 ENV AIRFLOW__CELERY__RESULT_BACKEND="db+postgresql://$conn_db"
-ENV AIRFLOW__CORE__SQL_ALCHEMY_CONN="postgresql+psycopg2://$conn_db"
+ENV AIRFLOW__DATABASE__SQL_ALCHEMY_CONN="postgresql+psycopg2://$conn_db"
 
 COPY ./{{cookiecutter.app_folder_name}}/ ${AIRFLOW_HOME}
 COPY ./{{cookiecutter.yamles_folder_name}}/airflow_pod_template.yaml ${AIRFLOW_HOME}/airflow_pod_template.yaml
