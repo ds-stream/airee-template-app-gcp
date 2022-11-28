@@ -64,7 +64,7 @@ spec:
             configMapKeyRef:
               key: POSTGRES_USER
               name:  postgres-config 
-        image: edoburu/pgbouncer:1.15.0
+        image: edoburu/pgbouncer:1.17.0
         lifecycle:
           preStop:
             exec:
