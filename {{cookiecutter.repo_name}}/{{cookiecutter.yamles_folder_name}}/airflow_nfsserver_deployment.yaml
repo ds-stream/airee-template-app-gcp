@@ -28,10 +28,14 @@ spec:
         securityContext:
           privileged: true
         volumeMounts:
-          - mountPath: /data
-            name: nfs-pvc
+          - mountPath: /exports
+            name: nfs-disk
+        lifecycle:
+          postStart:
+            exec:
+              command: ["/bin/sh", "-c", "mkdir -p /exports/dags; mkdir -p /exports/logs"]
       volumes:
-        - name: nfs-pvc
+        - name: nfs-disk
           gcePersistentDisk:
             pdName: nfs-disk-{{cookiecutter.workspace}}-{{cookiecutter.env}}
             fsType: ext4
